@@ -5,16 +5,67 @@ http://www.whatsapp.com/faq/es/android
 <?php
 /*
 Plugin Name: Funciones
-Plugin URI: http://ayudawordpress.com/
+Plugin URI: http://mente-encendida.com/
 Description: Plugin para liberar de funciones el fichero <code>functions.php</code> y activarlo a placer (o no) .
 Version: 1.0
-Author: Fernando Tellado
-Author URI: http://tellado.es
+Author: Fernando Tellado y Jose Lazo
+Author URI: http://joselazo.es
 License: GPLv2 o posterior
 */
 
+// TO-DO
+// Añadir un map-route
 
-//Mostrar los 4 últimos post. Se pone en una plantilla, no en el fuctions.php
+/*
+# LOGIN
+	## Logo personalizado en login
+	## Personalizar url logo acceso
+	## Cambiar texto alt del logo de login
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+ */
+
+
+// Logo personalizado en login *****************************************************************************
+
+add_action("login_head", "my_login_head");
+function my_login_head() {
+	echo "
+	<style>
+	body.login #login h1 a {
+		background: url('".get_bloginfo('template_url')."/images/loginlogo.png') no-repeat scroll center top transparent;
+		height: 135px;
+		width: 135px;
+	}
+	</style>
+	";
+}
+
+
+// Personalizar url logo acceso ******************************************************************************
+add_action( 'login_headerurl', 'my_custom_login_url' );
+function my_custom_login_url() {
+return 'http://mente-encendida.com';
+}
+
+
+// Cambiar texto alt del logo de login *****************************************************************
+add_action("login_headertitle","my_custom_login_title");
+function my_custom_login_title()
+{
+return 'Diseñado y creado para ti por Mente Encendida';
+}
+
+
+// Mostrar los 4 últimos post. Se pone en una plantilla, no en el fuctions.php
 ?>	
 <div class="ultimas-entradas">
 	<?php query_posts('showposts=4');?>
@@ -35,36 +86,6 @@ register_nav_menu( 'secundary', __( 'Menu Derecha', 'nombre_del_tema' ) );
        // en el archivo de la plantilla donde quieres el menu, por ejmplo footer.php
 wp_nav_menu( array( 'theme_location' => 'secundary' ) );
 
-
-// Logo personalizado en login *****************************************************************************
-
-add_action("login_head", "my_login_head");
-function my_login_head() {
-	echo "
-	<style>
-	body.login #login h1 a {
-		background: url('".get_bloginfo('template_url')."/images/awloginlogo.png') no-repeat scroll center top transparent;
-		height: 135px;
-		width: 135px;
-	}
-	</style>
-	";
-}
-
-
-// personalizar url logo acceso ******************************************************************************
-add_action( 'login_headerurl', 'my_custom_login_url' );
-function my_custom_login_url() {
-return 'http://mente-encendida.com';
-}
-
-
-//Cambiar texto alt del logo de login *****************************************************************
-add_action("login_headertitle","my_custom_login_title");
-function my_custom_login_title()
-{
-return 'Diseñado y creado para ti por Mente Encendida';
-}
 
 
 // Añadir campos sociales a los perfiles y elimina (unset) los inútiles *********************************
