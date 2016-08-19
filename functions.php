@@ -17,6 +17,22 @@ License: GPLv2 o posterior
 // Añadir un map-route
 
 /*
+/**
+ *
+ * Añadir los componentes de Polymer necesarios al tema
+ *
+ */
+add_action( 'wp_enqueue_scripts', 'mytheme_enqueue_polymer' );
+function mytheme_enqueue_polymer() {
+    wp_enqueue_script( 'webcomponentsjs', get_stylesheet_directory_url() . '/path/to/webcomponents-lite.js' );
+}
+
+add_action( 'wp_head', 'mytheme_html_imports' );
+function mytheme_html_imports() {
+    ?>
+    <link rel="import" href="<?php echo get_stylesheet_directory_url(); ?>/path/to/elements.html">
+    <?php
+}
 # LOGIN
 	## Logo personalizado en login
 	## Personalizar url logo acceso
