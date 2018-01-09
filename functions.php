@@ -49,6 +49,30 @@ function mytheme_html_imports() {
 # 
  */
 
+/**
+ * Class to UPDATE content when used WordPress importer
+ */
+class WPImporterUpdate {
+	protected $existing_post;
+	function __construct() {
+		add_filter( 'wp_import_existing_post', [ $this, 'wp_import_existing_post' ], 10, 2 );
+		add_filter( 'wp_import_post_data_processed', [ $this, 'wp_import_post_data_processed' ], 10, 2 );
+	}
+	function wp_import_existing_post( $post_id, $post ) {
+		if ( $this->existing_post = $post_id ) {
+			$post_id = 0; // force the post to be imported
+		}
+		return $post_id;
+	}
+	function wp_import_post_data_processed( $postdata, $post ) {
+		if ( $this->existing_post ) {
+			// update the existing post
+			$postdata['ID'] = $this->existing_post;
+		}
+		return $postdata;
+	}
+}
+new WPImporterUpdate;
 
 // Logo personalizado en login *****************************************************************************
 
