@@ -636,6 +636,92 @@ function get_tweets($usuario,$tweets) {
 	background-color:#FFF;
 	color:#000;
 }
+	    
+	    
+function images_asignation()
+{
+	// First clean URL
+	$redirect_url = remove_query_arg(array('images-asignation'), false);
+
+	if (!isset($_GET['_image_wpnonce'])) return;
+
+	if(!wp_verify_nonce($_GET['_image_wpnonce'], 'asign_image_nonce')) return;
+
+	if (!current_user_can('activate_plugins')) return;
+
+	function pippin_get_image_id($image_url)
+	{
+		global $wpdb;
+		$attachment = $wpdb->get_col($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE guid='%s';", $image_url));
+		if (isset($attachment[0])){
+			return $attachment[0];
+		} else {
+			return false;
+		}
+	}
+
+	$args = array(
+		'post_type'      => 'your-post-type',
+		'post_status'    => 'published',
+		'posts_per_page' => -1,
+	);
+
+	$query = new WP_Query($args);
+
+	$count       = 1;
+	$upload_dir  = wp_upload_dir();
+	$images_path = $upload_dir['url'].'/';
+
+	foreach ($query->posts as $post) {
+		$image_url = $images_path.$count.'.jpg';
+		$image_id  = pippin_get_image_id($image_url);
+		if ($image_id != false){
+			$yea = set_post_thumbnail($post,$image_id);
+		} else {
+			$rand = rand(1,100);
+			$image_url = $images_path . $rand . '.jpg';
+
+			$image_id  = pippin_get_image_id($image_url);
+			$yea = set_post_thumbnail($post, $image_id);
+		}
+		$count++;
+	}
+
+	wp_redirect(add_query_arg('images-asignation-count', $count, $redirect_url));
+
+}
+
+
+function add_external_images($image, $post_id)
+{
+	$media     = media_sideload_image($image, $post_id);
+	// therefore we must find it so we can set it as featured ID
+	if (!empty($media) && !is_wp_error($media)) {
+		$args = array(
+			'post_type' => 'attachment',
+			'posts_per_page' => -1,
+			'post_status' => 'any',
+			'post_parent' => $post_id
+		);
+
+		// reference new image to set as featured
+		$attachments = get_posts($args);
+
+		if (isset($attachments) && is_array($attachments)) {
+			foreach ($attachments as $attachment) {
+				// grab source of full size images (so no 300x150 nonsense in path)
+				$image = wp_get_attachment_image_src($attachment->ID, 'full');
+				// determine if in the $media image we created, the string of the URL exists
+				if (strpos($media, $image[0]) !== false) {
+					// if so, we found our image. set it as thumbnail
+					set_post_thumbnail($post_id, $attachment->ID);
+					// only want one image
+					break;
+				}
+			}
+		}
+	}
+}
 
 // Otra funcion
  ?>
