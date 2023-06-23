@@ -5,10 +5,10 @@ http://www.whatsapp.com/faq/es/android
 <?php
 /*
 Plugin Name: Funciones
-Plugin URI: http://mente-encendida.com/
+Plugin URI: https://joselazo.es/
 Description: Plugin para liberar de funciones el fichero <code>functions.php</code> y activarlo a placer (o no) .
 Version: 1.0
-Author: Fernando Tellado y Jose Lazo
+Author: Jose Lazo
 Author URI: http://joselazo.es
 License: GPLv2 o posterior
 */
