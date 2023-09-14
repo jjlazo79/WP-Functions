@@ -725,3 +725,29 @@ function add_external_images($image, $post_id)
 
 // Otra funcion
  ?>
+
+
+
+
+WEBP
+1-genero los ficheros webp de todos los png y jpg, con los comandos
+
+find ./ -type f -name '*.jpg' -exec sh -c ' cwebp -q 90 $1 -o "${1%.jpg}.jpg.webp"' _ {} \;
+find ./ -type f -name '*.png' -exec sh -c ' cwebp -q 90 $1 -o "${1%.png}.png.webp"' _ {} \;
+
+2-configuro .htaccess para que cualquier petición a un jpg o png lo redireccione als fichero webp correspondiente... ajustondo el .htacces podrias generar al vuelo el webp sin necesidad del paso 1...
+
+## Suppress mime type detection in browsers for unknown types
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+
+RewriteCond %{HTTP_ACCEPT} image/webp
+RewriteCond %{REQUEST_URI} (?i)(.*)(\.jpe?g|\.png)$
+RewriteCond %{DOCUMENT_ROOT}%1.webp -f
+RewriteRule (.+)\.(jpe?g|png|gif)$ $1.webp [T=image/webp,E=REQUEST_image]
+
+RewriteCond %{HTTP_HOST} ^www.joselazo.es$
+
+RewriteRule ^images/([^/]*\.(jpg|gif|png))$ https://www.joselazo.es/blog/images/$1.webp [L,R]
+RewriteRule ^media/k2/items/cache/([^/]*\.(jpg|gif|png))$ https://www.joselazo.es/blog/media/k2/i ... he/$1.webp [L,R]
