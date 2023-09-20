@@ -723,6 +723,35 @@ function add_external_images($image, $post_id)
 	}
 }
 
+
+
+function change_kkratings_run_code_one_time() {
+    if ( !get_option('kkratings_run_only_once_01') ):
+ 
+        //Get all posts
+        $args = array(
+            'post_type'   => 'post',
+            'post_status' => 'publish',
+            'numberposts' => -1
+        );
+        $articles = get_posts($args);
+        foreach ($articles as $article) {
+
+            $postmeta_casts   = rand(10, 20);
+            $media            = rand(45, 49) / 10;
+            $postmeta_ratings = floor($postmeta_casts * $media);
+
+            update_post_meta($article->ID, '_kksr_ratings', $postmeta_ratings);
+            update_post_meta($article->ID, '_kksr_casts', $postmeta_casts);
+            update_post_meta($article->ID, '_kksr_avg', $media);
+            
+        }
+ 
+        add_option('kkratings_run_only_once_01', 1); 
+    endif;
+}
+add_action( 'init', 'change_kkratings_run_code_one_time' );
+
 // Otra funcion
  ?>
 
