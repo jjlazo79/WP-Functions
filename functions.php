@@ -98,7 +98,7 @@ return 'http://mente-encendida.com';
 
 
 // Cambiar texto alt del logo de login *****************************************************************
-add_action("login_headertitle","my_custom_login_title");
+add_action("login_headertext","my_custom_login_title");
 function my_custom_login_title()
 {
 return 'Diseñado y creado para ti por Mente Encendida';
